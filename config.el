@@ -48,12 +48,48 @@
       :desc "Search web for text between BEG/END"
       "s w" #'eww-search-words)
 
-(setq doom-font (font-spec :family "Fantasque Sans Mono" :size 16)
-      doom-big-font (font-spec :family "Fantasque Sans Mono" :size 20)
+(setq doom-font (font-spec :family "Fantasque Sans Mono" :size 18)
+      doom-big-font (font-spec :family "Fantasque Sans Mono" :size 24)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 16))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
+
+(use-package! emacs-everywhere
+  ;; Entry points into this package are autoloaded; i.e. the `emacs-everywhere'
+  ;; function, meant to be called directly via emacsclient. See this module's
+  ;; readme for details.
+  :defer t
+  :config
+  (set-yas-minor-mode! 'emacs-everywhere-mode)
+
+  (after! doom-modeline
+    (doom-modeline-def-segment emacs-everywhere
+      (concat
+       (doom-modeline-spc)
+       (when (emacs-everywhere-markdown-p)
+         (concat
+          (all-the-icons-octicon "markdown" :face 'all-the-icons-green :v-adjust 0.02)
+          (doom-modeline-spc)))
+       (propertize (emacs-everywhere-app-class emacs-everywhere-current-app)
+                   'face 'doom-modeline-project-dir)
+       (doom-modeline-spc)
+       (propertize (truncate-string-to-width
+                    (emacs-everywhere-app-title emacs-everywhere-current-app)
+                    45 nil nil "…")
+                   'face 'doom-modeline-buffer-minor-mode)))
+    (doom-modeline-def-modeline 'emacs-everywhere
+      '(bar modals emacs-everywhere buffer-position word-count parrot selection-info)
+      '(input-method major-mode checker))
+    (add-hook! 'emacs-everywhere-mode-hook
+      (defun +everywhere-set-modeline ()
+        (doom-modeline-set-modeline 'emacs-everywhere))))
+  (add-hook! 'emacs-everywhere-init-hooks
+    (defun +everywhere-clear-persp-info-h ()
+      (when (bound-and-true-p persp-mode)
+        (setq persp-emacsclient-init-frame-behaviour-override nil))))
+  (after! solaire-mode
+    (add-hook 'emacs-everywhere-init-hooks #'solaire-mode)))
 
 (use-package! emojify
   :config
@@ -160,6 +196,12 @@
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
 
+(use-package! org-ref
+  :after org
+  :config
+  (setq org-ref-default-bibliography
+        '("~/Insync/BC/Emacs/org")))
+
 ;;(define-key evil-normal-state-map "u" 'undo-fu-only-undo)
 ;;(define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
 ;;(setq doom-modeline-major-mode-icon t)
@@ -172,7 +214,7 @@
 ;;                               (file . find-file-other-window)
 ;;                               (wl . wl-other-frame))))
 
-;;(setq doom-theme 'doom-dracula)
+;; (setq doom-theme 'doom-dracula)
 ;; LEUVEN Theme by github.com/fniessen
 ;; Fontify code in blocks in code blocks
 (setq doom-theme 'leuven)
@@ -189,9 +231,9 @@
     '((t :weight bold :box "#89C58F"
          :foreground "#89C58F" :background "#E2FEDE"))
     "Face used to display state WAIT.")
-  (defface mode-line
-    '((t (:box (:line-width 1 :color "#1A2F54") :foreground "green" :background "DarkOrange")))
-    "Orange and green colors in mode-line.")
+;;  (defface mode-line
+;;    '((t (:box (:line-width 1 :color "#1A2F54") :foreground "green" :background "DarkOrange")))
+;;    "Orange and green colors in mode-line.")
   )
 
 (map! :leader
@@ -201,10 +243,15 @@
       )
 
 (map! :leader
-      :desc "Annotation-Mode" "t A" #'annotate-mode
+      :desc "Annotation-Mode"
+      "t A" #'annotate-mode)
+(map! :leader
+ (:prefix ("A" . "Annotations")
+      :desc "Annote me"
+      "a" #'annotate-annotate
       :leader
-      :desc "Annote me" "A a" #'annotate-annotate
-      :desc "Refresh" "A r" #'annotate-load-annotations)
+      :desc "Refresh"
+      "r" #'annotate-load-annotations))
 
 (map! :leader
       :desc "XWidget Browser" "o x" #'xwidget-webkit-browse-url)
@@ -278,7 +325,7 @@
         :prefix "n"
         :desc "org-roam" "l" #'org-roam-buffer-toggle
         :desc "org-roam-insert" "i" #'org-roam-node-insert
-        :desc "org-roam-dailies-find-date" "D" #'org-roam-dailies-find-date
+        :desc "org-roam-dailies-find-date" "d" #'org-roam-dailies-find-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
         :desc "org-roam-dailies-find-today" "t" #'org-roam-dailies-find-today
         :desc "org-roam-dailies-capture-today" "y" #'org-roam-dailies-find-yesterday
@@ -329,6 +376,11 @@
 ;;        org-roam-server-network-label-truncate-length 60
 ;;        org-roam-server-network-label-wrap-length 20))
 
+(use-package! org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref))
+
 (use-package! org-journal
       :config
       (setq org-journal-dir "~/Insync/BC/Emacs/org/"
@@ -338,6 +390,10 @@
     org-journal-enable-agenda-integration t))
 
 (setq deft-directory "~/Insync/BC/Emacs/org/")
+(map! :leader
+      :prefix "n"
+      :desc "Open deft"
+      "D" #'deft)
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (set-frame-parameter (selected-frame) 'alpha '(95 50))
