@@ -377,17 +377,6 @@ I was tired of having to run org-babel-tangle after saving my literate dotfiles.
 ;;    "Orange and green colors in mode-line.")
   )
 #+end_src
-* XWidget
-:PROPERTIES:
-:ID:       62242e98-0567-4fd1-859e-de8ea13abd30
-:END:
-#+begin_src emacs-lisp
-(map! :leader
-      :desc "Xwidget browser" "o x" #'xwidget-webkit-browse-url
-      :leader
-      :desc
-      )
-#+end_src
 * Annotate (bastibe@github)
 :PROPERTIES:
 :ID:       5c9e9521-8e81-47d9-b427-6c3972c28e23

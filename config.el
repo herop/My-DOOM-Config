@@ -237,12 +237,6 @@
   )
 
 (map! :leader
-      :desc "Xwidget browser" "o x" #'xwidget-webkit-browse-url
-      :leader
-      :desc
-      )
-
-(map! :leader
       :desc "Annotation-Mode"
       "t A" #'annotate-mode)
 (map! :leader
