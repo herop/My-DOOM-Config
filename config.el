@@ -389,5 +389,16 @@
       :desc "Open deft"
       "D" #'deft)
 
+(map! :leader
+      :desc "ERC"
+      "o i" #'erc-tls)
+(setq erc-server "irc.libera.chat"
+      erc-nick "HeroP"
+      erc-user-full-name "Jochen"
+      erc-track-shorten-start 8
+      erc-autojoin-chennels-alist '(("irc-libera-chat" "*systemcrafters" "#emacs"))
+      erc-kill-buffer-on-part t
+      erc-aut-query 'bury)
+
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (set-frame-parameter (selected-frame) 'alpha '(95 50))

@@ -617,3 +617,19 @@ What DOOM left out or broke
       :desc "Open deft"
       "D" #'deft)
 #+END_SRC
+* ERP - Libera-Chat
+:PROPERTIES:
+:ID:       0cd3ed2f-7ea0-4686-853c-5b95cbc14735
+:END:
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "ERC"
+      "o i" #'erc-tls)
+(setq erc-server "irc.libera.chat"
+      erc-nick "HeroP"
+      erc-user-full-name "Jochen"
+      erc-track-shorten-start 8
+      erc-autojoin-chennels-alist '(("irc-libera-chat" "*systemcrafters" "#emacs"))
+      erc-kill-buffer-on-part t
+      erc-aut-query 'bury)
+#+end_src
