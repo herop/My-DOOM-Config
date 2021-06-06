@@ -396,7 +396,7 @@
       erc-nick "HeroP"
       erc-user-full-name "Jochen"
       erc-track-shorten-start 8
-      erc-autojoin-chennels-alist '(("irc-libera-chat" "*systemcrafters" "#emacs"))
+      erc-autojoin-chennels-alist '(("irc-libera-chat" "#systemcrafters" "#emacs"))
       erc-kill-buffer-on-part t
       erc-aut-query 'bury)
 
