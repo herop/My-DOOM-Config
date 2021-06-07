@@ -322,17 +322,6 @@ I was tired of having to run org-babel-tangle after saving my literate dotfiles.
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
 #+END_SRC
-** Org Ref
-:PROPERTIES:
-:ID:       fdee8710-c4d0-4c61-95d2-adf4749a3df7
-:END:
-#+begin_src emacs-lisp
-(use-package! org-ref
-  :after org
-  :config
-  (setq org-ref-default-bibliography
-        '("~/Insync/BC/Emacs/org")))
-#+end_src
 * Necessities
 :PROPERTIES:
 :ID:       f283f17b-4d8b-471f-b80c-c59cc3227d17
@@ -558,7 +547,7 @@ What DOOM left out or broke
         '(("d" "default" plain
            "%?"
            :if-new (file+head "${slug}.org"
-                              "#+title: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+FILETAGS:\n")
+                              "#+TITLE: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+FILETAGS:\n")
            :immediate-finish t
            :unnarrowed t)))
       (setq org-roam-dailies-capture-templates
@@ -583,16 +572,6 @@ What DOOM left out or broke
 ;;        org-roam-server-network-label-truncate-length 60
 ;;        org-roam-server-network-label-wrap-length 20))
 #+END_SRC
-** Org-Roam Bibtex
-:PROPERTIES:
-:ID:       ebae07ce-0f9a-4fdc-9fb4-f41af41a0180
-:END:
-#+begin_src emacs-lisp
-(use-package! org-roam-bibtex
-  :after org-roam
-  :config
-  (require 'org-ref))
-#+end_src
 * Org-Journal
 :PROPERTIES:
 :ID:       572a5780-2d94-4c30-8278-2a1ba365a233

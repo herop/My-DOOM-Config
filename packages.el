@@ -77,7 +77,7 @@
 (package! org-ref)
 (package! org-roam
   :recipe (:host github :repo "org-roam/org-roam" :branch "v2"))
-(package! org-roam-bibtex)
+;;(package! org-roam-bibtex)
 ;;(package! org-roam-server)
 ;;(package! mu4e)
 (package! powerline)

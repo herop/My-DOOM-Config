@@ -196,12 +196,6 @@
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
 
-(use-package! org-ref
-  :after org
-  :config
-  (setq org-ref-default-bibliography
-        '("~/Insync/BC/Emacs/org")))
-
 ;;(define-key evil-normal-state-map "u" 'undo-fu-only-undo)
 ;;(define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
 ;;(setq doom-modeline-major-mode-icon t)
@@ -350,7 +344,7 @@
         '(("d" "default" plain
            "%?"
            :if-new (file+head "${slug}.org"
-                              "#+title: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+FILETAGS:\n")
+                              "#+TITLE: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+FILETAGS:\n")
            :immediate-finish t
            :unnarrowed t)))
       (setq org-roam-dailies-capture-templates
@@ -369,11 +363,6 @@
 ;;        org-roam-server-network-label-truncate t
 ;;        org-roam-server-network-label-truncate-length 60
 ;;        org-roam-server-network-label-wrap-length 20))
-
-(use-package! org-roam-bibtex
-  :after org-roam
-  :config
-  (require 'org-ref))
 
 (use-package! org-journal
       :config
