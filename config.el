@@ -105,13 +105,13 @@
         (require 'org-bullets)  ; Nicer bullets in org-mode
         (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
         (add-to-list 'auto-mode-alist '("\.\(org\|agenda_files\|txt\)$" . org-mode))
-        (setq org-directory "~/Insync/BC/Emacs/org/"
-              +org-capture-journal-file "~/Insync/BC/Emacs/org/journal.org"
+        (setq org-directory "~/kDrive/BC/Emacs/org/"
+              +org-capture-journal-file "~/kDrive/BC/Emacs/org/journal.org"
               org-default-notes-file (expand-file-name "notes.org" org-directory)
-              org-agenda-files (directory-files-recursively "~/Insync/BC/Emacs/org/" "\\.org$")
+              org-agenda-files (directory-files-recursively "~/kDrive/BC/Emacs/org/" "\\.org$")
               org-ellipsis " ▼ "
               org-log-done 'time
-              org-journal-dir "~/Insync/BC/Emacs/org/"
+              org-journal-dir "~/kDrive/BC/Emacs/org/"
               org-startup-folded t
               org-journal-date-format "%B %d, %Y (%A)"
               org-journal-file-format "%Y-%m-%d"
@@ -287,7 +287,7 @@
         :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
   :config
   (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
-  (setq org-roam-directory "~/Insync/BC/Emacs/org/"
+  (setq org-roam-directory "~/kDrive/BC/Emacs/org/"
         org-roam-dailies-directory "daily/"
         org-roam-db-gc-threshold gc-cons-threshold
         org-id-link-to-org-use-id t
@@ -330,13 +330,13 @@
 
 (use-package! org-journal
       :config
-      (setq org-journal-dir "~/Insync/BC/Emacs/org/"
+      (setq org-journal-dir "~/kDrive/BC/Emacs/org/"
       org-journal-date-prefix "#+TITLE: "
       org-journal-file-format "%Y-%m-%d.org"
       org-journal-date-format "%A, %d %B %Y"
     org-journal-enable-agenda-integration t))
 
-(setq deft-directory "~/Insync/BC/Emacs/org/")
+(setq deft-directory "~/kDrive/BC/Emacs/org/")
 (map! :leader
       :prefix "n"
       :desc "Open deft"
