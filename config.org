@@ -483,25 +483,25 @@ What DOOM left out or broke
         :desc "org-roam-find-file" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
         :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
-  :config
-  (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
   (setq org-roam-directory "~/kDrive/BC/Emacs/org/"
         org-roam-dailies-directory "daily/"
         org-roam-db-gc-threshold gc-cons-threshold
         org-id-link-to-org-use-id t
         org-roam-completion-everywhere t
         org-roam-node-display-template "${title:100} ${tags:50}")
+  :config
+  (org-roam-setup)
+  (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
   (add-to-list 'display-buffer-alist
                '(("\\*org\\*"
                   (display-buffer-in-direction)
                   (direction . right)
                   (window-width . 0.33)
                   (window-height . fit-window-to-buffer))))
-  (setq org-roam-mode-sections
-        (list #'org-roam-backlinks-insert-section
-              #'org-roam-reflinks-insert-section
-              #'org-roam-unlinked-references-insert-section))
-(org-roam-setup)
+(setq org-roam-mode-sections
+       (list #'org-roam-backlinks-insert-section
+             #'org-roam-reflinks-insert-section
+             #'org-roam-unlinked-references-insert-section))
 (setq org-roam-capture-templates
         '(("d" "default" plain
            "%?"
