@@ -152,10 +152,10 @@ Available functions (positions) for 'ivy-posframe-display-functions-alist'
 ;; Global mode
 ;; display at `ivy-posframe-style'
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
 
 (ivy-posframe-mode 1) ; 1 enables posframe-mode, 0 disables it.
@@ -474,13 +474,13 @@ What DOOM left out or broke
   (map! :leader
         :prefix "n"
         :desc "org-roam" "l" #'org-roam-buffer-toggle
-        :desc "org-roam-insert" "i" #'org-roam-node-insert
+        :desc "org-roam-node-insert" "i" #'org-roam-node-insert
         :desc "org-roam-dailies-find-date" "d" #'org-roam-dailies-find-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
         :desc "org-roam-dailies-find-today" "t" #'org-roam-dailies-find-today
-        :desc "org-roam-dailies-capture-today" "y" #'org-roam-dailies-find-yesterday
+        :desc "org-roam-dailies-find-yesterday" "y" #'org-roam-dailies-find-yesterday
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
-        :desc "org-roam-find-file" "f" #'org-roam-node-find
+        :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
         :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
   (setq org-roam-directory "~/kDrive/BC/Emacs/org/"
@@ -506,14 +506,14 @@ What DOOM left out or broke
         '(("d" "default" plain
            "%?"
            :if-new (file+head "${slug}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+FILETAGS:\n")
+                              "#+TITLE: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+ROAM_TAGS:\n#+ROAM_ALIASES:\n#+ROAM_REFS\n#+FILETAGS:\n")
            :immediate-finish t
            :unnarrowed t)))
       (setq org-roam-dailies-capture-templates
         '(("d" "default" entry
            "* %?"
            :if-new (file+head "daily/%<%Y-%m-%d>.org"
-                              "#+TITLE: %<%A, %e %B %Y>\n#+FILETAGS:\n")))
+                              "#+TITLE: %<%A, %e %B %Y>\n#+ROAM_TAGS:\n#+ROAM_ALIASES:\n#+ROAM_REFS\n#+FILETAGS:\n")))
         ))
 #+END_SRC
 ** Org-Roam Server
