@@ -154,8 +154,8 @@ Available functions (positions) for 'ivy-posframe-display-functions-alist'
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
 
 (ivy-posframe-mode 1) ; 1 enables posframe-mode, 0 disables it.
@@ -544,6 +544,30 @@ What DOOM left out or broke
       org-journal-date-format "%A, %d %B %Y"
     org-journal-enable-agenda-integration t))
 #+END_SRC
+* LanguageTool
+:PROPERTIES:
+:ID:       3aab8073-21f6-41eb-a01c-ac0ac2569b1d
+:END:
+#+begin_src emacs-lisp
+;;(use-package! languagetool
+  (map! :leader
+        (:prefix ("l" . "languagecheck")
+        :desc "Check with transient" "c" #'languagetool-check
+        :leader
+        :desc "Clear Buffer" "b" #'languagetool-clear-buffer
+        :leader
+        :desc "Check at point" "p" #'languagetool-correct-at-point
+        :leader
+        :desc "Correct buffer" "C" #'languagetool-correct-buffer
+        :leader
+        :desc "Set language" "s" #'languagetool-set-language))
+  :config
+  (setq languagetool-language-tool-jar "/home/jburkhard/.languagetool/languagetool-commandline.jar"
+    ;; languagetool-server-language-tool-jar "/usr/share/java/languagetool/languagetool-server.jar"
+        languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+        languagetool-default-language "en-US"
+        languagetool-java-bin "/usr/bin/java")
+#+end_src
 * DEFT
 :PROPERTIES:
 :ID:       8a697ed4-b75f-45df-9705-209c62f53c27

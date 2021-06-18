@@ -69,8 +69,8 @@
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
 ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
 
 (ivy-posframe-mode 1) ; 1 enables posframe-mode, 0 disables it.
@@ -335,6 +335,25 @@
       org-journal-file-format "%Y-%m-%d.org"
       org-journal-date-format "%A, %d %B %Y"
     org-journal-enable-agenda-integration t))
+
+;;(use-package! languagetool
+  (map! :leader
+        (:prefix ("l" . "languagecheck")
+        :desc "Check with transient" "c" #'languagetool-check
+        :leader
+        :desc "Clear Buffer" "b" #'languagetool-clear-buffer
+        :leader
+        :desc "Check at point" "p" #'languagetool-correct-at-point
+        :leader
+        :desc "Correct buffer" "C" #'languagetool-correct-buffer
+        :leader
+        :desc "Set language" "s" #'languagetool-set-language))
+  :config
+  (setq languagetool-language-tool-jar "/home/jburkhard/.languagetool/languagetool-commandline.jar"
+    ;; languagetool-server-language-tool-jar "/usr/share/java/languagetool/languagetool-server.jar"
+        languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+        languagetool-default-language "en-US"
+        languagetool-java-bin "/usr/bin/java")
 
 (setq deft-directory "~/kDrive/BC/Emacs/org/")
 (map! :leader
