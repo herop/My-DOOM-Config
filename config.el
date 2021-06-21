@@ -285,7 +285,7 @@
         :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
         :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
-  (setq org-roam-directory "~/kDrive/BC/Emacs/org/"
+  (setq org-roam-directory "~/kDrive/BC/Emacs/org"
         org-roam-dailies-directory "daily/"
         org-roam-db-gc-threshold gc-cons-threshold
         org-id-link-to-org-use-id t
@@ -314,7 +314,7 @@
       (setq org-roam-dailies-capture-templates
         '(("d" "default" entry
            "* %?"
-           :if-new (file+head "daily/%<%Y-%m-%d>.org"
+           :if-new (file+head "%<%Y-%m-%d>.org"
                               "#+TITLE: %<%A, %e %B %Y>\n#+ROAM_TAGS:\n#+ROAM_ALIASES:\n#+ROAM_REFS\n#+FILETAGS:\n")))
         ))
 
