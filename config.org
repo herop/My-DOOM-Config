@@ -474,6 +474,7 @@ What DOOM left out or broke
   (map! :leader
         :prefix "n"
         :desc "org-roam" "l" #'org-roam-buffer-toggle
+        :desc "org-roam-graph" "g" #'org-roam-graph
         :desc "org-roam-node-insert" "i" #'org-roam-node-insert
         :desc "org-roam-dailies-find-date" "d" #'org-roam-dailies-find-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
