@@ -123,7 +123,7 @@ Settings related to fonts within Doom Emacs:
     (set-fontset-font
      t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend))
   (setq emojify-display-style 'unicode)
-  (setq emojify-emoji-styles '(unicode)))
+  (setq emojify-emoji-styles 'unicode))
 #+end_src
 * IVY
 Ivy is a generic completion mechanism for Emacs.
@@ -196,21 +196,6 @@ I have toggled display-line-numbers-type so I have line numbers displayed.  Doom
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+END_SRC
 
-* NEOTREE
-:PROPERTIES:
-:ID:       87fa4c7d-4551-4a40-a1bc-ec0160eb0926
-:END:
-Neotree is a file tree viewer.  When you open neotree, it jumps to the current file thanks to neo-smart-open.  The neo-window-fixed-size setting makes the neotree width be adjustable.  Doom Emacs had no keybindings set for neotree.  Since Doom Emacs uses 'SPC t' for 'toggle' keybindings, I used 'SPC t n' for toggle-neotree.
-
-#+BEGIN_SRC emacs-lisp
-(after! neotree
-  (setq neo-smart-open t
-        neo-window-fixed-size nil))
-(map! :leader
-      :desc "Toggle neotree file viewer"
-      "t n" #'toggle-neotree)
-#+END_SRC
-
 * ORG MODE
 :PROPERTIES:
 :ID:       98e897d4-8a54-4b1e-969a-de4b6e475432
@@ -250,7 +235,7 @@ Note that I wrapped most of this in (after! org).  Without this, my settings mig
                  "WAIT(w@/!)"           ; Something is holding up this task
                  "|"                 ; The pipe necessary to separate "active" states and "inactive" states
                  "DONE(d)"           ; Task has been completed
-                 "CANCL(c@/t)" )))) ; Task has been cancelled
+                 "CANCL(c@/!)" )))) ; Task has been cancelled
   (map! :leader
         :desc "Insert Schedule"
         "m s" #'org-schedule
@@ -433,19 +418,6 @@ I set splits to default to opening on the right using 'prefer-horizontal-split'.
 (map! :leader
       :desc "Clone indirect buffer other window"
       "b c" #'clone-indirect-buffer-other-window)
-#+END_SRC
-
-* SUBLIMITY
-:PROPERTIES:
-:ID:       153e9080-f127-48f6-90fb-3bc63ec0e36a
-:END:
-The sublimity extension offers Sublime-like smooth scrolling and an experimental minimap.  You can also require sublimity-attractive if you want to center everything for a distraction-free mode.  I do not use this extension, hence the reason I have sublimity-mode set to 0.  Set this to 1 to enable it.
-
-#+BEGIN_SRC emacs-lisp
-(require 'sublimity-scroll)
-(require 'sublimity-map)
-(require 'sublimity-attractive)
-(sublimity-mode 0)
 #+END_SRC
 
 * WINNER MODE

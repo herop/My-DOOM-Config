@@ -61,7 +61,7 @@
     (set-fontset-font
      t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend))
   (setq emojify-display-style 'unicode)
-  (setq emojify-emoji-styles '(unicode)))
+  (setq emojify-emoji-styles 'unicode))
 
 (require 'ivy-posframe)
 ;; Global mode
@@ -93,13 +93,6 @@
                 term-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-(after! neotree
-  (setq neo-smart-open t
-        neo-window-fixed-size nil))
-(map! :leader
-      :desc "Toggle neotree file viewer"
-      "t n" #'toggle-neotree)
 
 (after! org
         (require 'org-bullets)  ; Nicer bullets in org-mode
@@ -133,7 +126,7 @@
                  "WAIT(w@/!)"           ; Something is holding up this task
                  "|"                 ; The pipe necessary to separate "active" states and "inactive" states
                  "DONE(d)"           ; Task has been completed
-                 "CANCL(c@/t)" )))) ; Task has been cancelled
+                 "CANCL(c@/!)" )))) ; Task has been cancelled
   (map! :leader
         :desc "Insert Schedule"
         "m s" #'org-schedule
@@ -257,11 +250,6 @@
 (map! :leader
       :desc "Clone indirect buffer other window"
       "b c" #'clone-indirect-buffer-other-window)
-
-(require 'sublimity-scroll)
-(require 'sublimity-map)
-(require 'sublimity-attractive)
-(sublimity-mode 0)
 
 (map! :leader
       :desc "Winner redo"
