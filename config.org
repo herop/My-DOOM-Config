@@ -450,7 +450,7 @@ What DOOM left out or broke
         :desc "org-roam-node-insert" "i" #'org-roam-node-insert
         :desc "org-roam-dailies-find-date" "d" #'org-roam-dailies-find-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
-        :desc "org-roam-dailies-find-today" "t" #'org-roam-dailies-find-today
+        :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
         :desc "org-roam-dailies-find-yesterday" "y" #'org-roam-dailies-find-yesterday
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
         :desc "org-roam-node-find" "f" #'org-roam-node-find
@@ -459,6 +459,7 @@ What DOOM left out or broke
   (setq org-roam-directory "~/kDrive/BC/Emacs/org"
         org-roam-dailies-directory "daily/"
         org-roam-db-gc-threshold gc-cons-threshold
+        org-roam-v2-ack t
         org-id-link-to-org-use-id t
         org-roam-completion-everywhere t
         org-roam-node-display-template "${title:100} ${tags:50}")

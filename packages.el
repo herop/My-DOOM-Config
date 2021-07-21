@@ -74,9 +74,9 @@
 (package! wc-mode)
 (package! writeroom-mode)
 (package! magit)
-(package! org-ref)
-(package! org-roam
-  :recipe (:host github :repo "org-roam/org-roam" :branch "v2"))
+;; (package! org-ref)
+(package! org-roam)
+;;  :recipe (:host github :repo "org-roam/org-roam" :branch "v2"))
 (package! languagetool)
 ;;(package! org-roam-bibtex)
 ;;(package! org-roam-server)
