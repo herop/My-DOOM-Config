@@ -363,4 +363,4 @@
       erc-aut-query 'bury)
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(set-frame-parameter (selected-frame) 'alpha '(95 50))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
