@@ -17,7 +17,7 @@ Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.  Bookm
 :END:
 #+BEGIN_SRC elisp
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
+(set-frame-parameter (selected-frame) 'alpha '(95 50))
 #+END_SRC
 * DIRED
 :PROPERTIES:
@@ -448,10 +448,10 @@ What DOOM left out or broke
         :desc "org-roam" "l" #'org-roam-buffer-toggle
         :desc "org-roam-graph" "g" #'org-roam-graph
         :desc "org-roam-node-insert" "i" #'org-roam-node-insert
-        :desc "org-roam-dailies-find-date" "d" #'org-roam-dailies-find-date
+        :desc "org-roam-dailies-goto-date" "d" #'org-roam-dailies-find-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
         :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
-        :desc "org-roam-dailies-find-yesterday" "y" #'org-roam-dailies-find-yesterday
+        :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-find-yesterday
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
         :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
