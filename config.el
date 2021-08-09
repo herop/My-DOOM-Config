@@ -2,7 +2,7 @@
 ;;(custom-set-faces '(fixed-pitch ((t (:family "Iosevka"))))) ; or set it to nil
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(set-frame-parameter (selected-frame) 'alpha '(95 50))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
 
 (map! :leader
       :desc "Dired"
@@ -272,7 +272,7 @@
         :desc "org-roam-dailies-goto-date" "d" #'org-roam-dailies-find-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
         :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
-        :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-find-yesterday
+        :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-goto-yesterday
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
         :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
@@ -293,10 +293,11 @@
                   (direction . right)
                   (window-width . 0.33)
                   (window-height . fit-window-to-buffer))))
-(setq org-roam-mode-sections
-       (list #'org-roam-backlinks-insert-section
-             #'org-roam-reflinks-insert-section
-             #'org-roam-unlinked-references-insert-section))
+(setq org-roam-mode-section-functions
+       (list #'org-roam-backlinks-section
+             #'org-roam-reflinks-section
+           ;;  #'org-roam-unlinked-references-insert-section
+           ))
 (setq org-roam-capture-templates
         '(("d" "default" plain
            "%?"
