@@ -1,9 +1,6 @@
 (setq custom-file null-device)
 ;;(custom-set-faces '(fixed-pitch ((t (:family "Iosevka"))))) ; or set it to nil
 
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
-
 (map! :leader
       :desc "Dired"
       "d d" #'dired
@@ -105,6 +102,7 @@
               +org-capture-journal-file "~/kDrive/BC/Emacs/org/journal.org"
               org-default-notes-file (expand-file-name "notes.org" org-directory)
               org-agenda-files (directory-files-recursively "~/kDrive/BC/Emacs/org/" "\\.org$")
+              org-refile-allow-creating-parent-nodes 'confirm
               org-ellipsis " ▼ "
               org-log-done 'time
               org-journal-dir "~/kDrive/BC/Emacs/org/"
@@ -155,6 +153,16 @@
 (defun dt/org-babel-tangle-current-buffer-async ()
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
+
+(require 'org-download)
+(add-hook 'org-mode-hook 'org-download-enable)
+(map! :leader
+     (:prefix ("D" . "Org-Downloader")
+     :desc "Org-Download-Clipboard"
+     "c" #'org-download-clipboard
+     :leader
+     :desc "Org-Download-Yank"
+     "y" #'org-download-yank))
 
 ;;(define-key evil-normal-state-map "u" 'undo-fu-only-undo)
 ;;(define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
@@ -269,7 +277,7 @@
         :desc "org-roam" "l" #'org-roam-buffer-toggle
         :desc "org-roam-graph" "g" #'org-roam-graph
         :desc "org-roam-node-insert" "i" #'org-roam-node-insert
-        :desc "org-roam-dailies-goto-date" "d" #'org-roam-dailies-find-date
+        :desc "org-roam-dailies-goto-date" "d" #'org-roam-dailies-goto-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
         :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
         :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-goto-yesterday
@@ -365,3 +373,6 @@
       erc-autojoin-chennels-alist '(("irc-libera-chat" "#systemcrafters" "#emacs"))
       erc-kill-buffer-on-part t
       erc-aut-query 'bury)
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))

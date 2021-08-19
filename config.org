@@ -211,6 +211,7 @@ Note that I wrapped most of this in (after! org).  Without this, my settings mig
               +org-capture-journal-file "~/kDrive/BC/Emacs/org/journal.org"
               org-default-notes-file (expand-file-name "notes.org" org-directory)
               org-agenda-files (directory-files-recursively "~/kDrive/BC/Emacs/org/" "\\.org$")
+              org-refile-allow-creating-parent-nodes 'confirm
               org-ellipsis " ▼ "
               org-log-done 'time
               org-journal-dir "~/kDrive/BC/Emacs/org/"
@@ -266,6 +267,21 @@ I was tired of having to run org-babel-tangle after saving my literate dotfiles.
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
 #+END_SRC
+** Org-download
+:PROPERTIES:
+:ID:       0d0e77fb-a3f8-4a24-b3c6-5f5bb380db83
+:END:
+#+begin_src emacs-lisp
+(require 'org-download)
+(add-hook 'org-mode-hook 'org-download-enable)
+(map! :leader
+     (:prefix ("D" . "Org-Downloader")
+     :desc "Org-Download-Clipboard"
+     "c" #'org-download-clipboard
+     :leader
+     :desc "Org-Download-Yank"
+     "y" #'org-download-yank))
+#+end_src
 * Necessities
 :PROPERTIES:
 :ID:       f283f17b-4d8b-471f-b80c-c59cc3227d17
@@ -448,7 +464,7 @@ What DOOM left out or broke
         :desc "org-roam" "l" #'org-roam-buffer-toggle
         :desc "org-roam-graph" "g" #'org-roam-graph
         :desc "org-roam-node-insert" "i" #'org-roam-node-insert
-        :desc "org-roam-dailies-goto-date" "d" #'org-roam-dailies-find-date
+        :desc "org-roam-dailies-goto-date" "d" #'org-roam-dailies-goto-date
         :desc "org-roam-ref-find" "r" #'org-roam-ref-find
         :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
         :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-goto-yesterday
