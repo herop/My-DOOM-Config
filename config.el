@@ -1,6 +1,9 @@
 (setq custom-file null-device)
 ;;(custom-set-faces '(fixed-pitch ((t (:family "Iosevka"))))) ; or set it to nil
 
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
+
 (map! :leader
       :desc "Dired"
       "d d" #'dired
@@ -156,6 +159,9 @@
 
 (require 'org-download)
 (add-hook 'org-mode-hook 'org-download-enable)
+;; Use org-download-method directory is being used by default
+(setq-default org-download-image-dir "~/kDrive/BC/Emacs/org/files/images")
+(setq org-download-screenshot-method "gnome-screenshot -a -f %s")
 (map! :leader
      (:prefix ("D" . "Org-Downloader")
      :desc "Org-Download-Clipboard"
@@ -282,6 +288,7 @@
         :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
         :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-goto-yesterday
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
+        :desc "org-roam-dailies-goto-tomorrow" "T" #'org-roam-dailies-goto-tomorrow
         :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
         :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
@@ -373,6 +380,3 @@
       erc-autojoin-chennels-alist '(("irc-libera-chat" "#systemcrafters" "#emacs"))
       erc-kill-buffer-on-part t
       erc-aut-query 'bury)
-
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))

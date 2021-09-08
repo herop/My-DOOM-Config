@@ -274,6 +274,9 @@ I was tired of having to run org-babel-tangle after saving my literate dotfiles.
 #+begin_src emacs-lisp
 (require 'org-download)
 (add-hook 'org-mode-hook 'org-download-enable)
+;; Use org-download-method directory is being used by default
+(setq-default org-download-image-dir "~/kDrive/BC/Emacs/org/files/images")
+(setq org-download-screenshot-method "gnome-screenshot -a -f %s")
 (map! :leader
      (:prefix ("D" . "Org-Downloader")
      :desc "Org-Download-Clipboard"
@@ -469,6 +472,7 @@ What DOOM left out or broke
         :desc "org-roam-dailies-goto-today" "t" #'org-roam-dailies-goto-today
         :desc "org-roam-dailies-goto-yesterday" "y" #'org-roam-dailies-goto-yesterday
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
+        :desc "org-roam-dailies-goto-tomorrow" "T" #'org-roam-dailies-goto-tomorrow
         :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture
         :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
