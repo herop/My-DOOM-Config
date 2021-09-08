@@ -1,9 +1,6 @@
 (setq custom-file null-device)
 ;;(custom-set-faces '(fixed-pitch ((t (:family "Iosevka"))))) ; or set it to nil
 
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
-
 (map! :leader
       :desc "Dired"
       "d d" #'dired
@@ -380,3 +377,6 @@
       erc-autojoin-chennels-alist '(("irc-libera-chat" "#systemcrafters" "#emacs"))
       erc-kill-buffer-on-part t
       erc-aut-query 'bury)
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
