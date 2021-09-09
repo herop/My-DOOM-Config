@@ -287,8 +287,7 @@
         :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today
         :desc "org-roam-dailies-goto-tomorrow" "T" #'org-roam-dailies-goto-tomorrow
         :desc "org-roam-node-find" "f" #'org-roam-node-find
-        :desc "org-roam-capture" "c" #'org-roam-capture
-        :desc "org-roam-unlinked-references" "u" #'org-roam-unlinked-references)
+        :desc "org-roam-capture" "c" #'org-roam-capture)
   (setq org-roam-directory "~/kDrive/BC/Emacs/org"
         org-roam-dailies-directory "daily/"
         org-roam-db-gc-threshold gc-cons-threshold
@@ -308,7 +307,7 @@
 (setq org-roam-mode-section-functions
        (list #'org-roam-backlinks-section
              #'org-roam-reflinks-section
-           ;;  #'org-roam-unlinked-references-insert-section
+             #'org-roam-unlinked-references-section
            ))
 (setq org-roam-capture-templates
         '(("d" "default" plain
