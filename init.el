@@ -175,8 +175,7 @@
        ;;notmuch
        ;;(wanderlust +gmail)
 
-       :app
-       everywhere       ; the emacs everywhere package
+       :app everywhere       ; the emacs everywhere package
        ;;calendar
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
