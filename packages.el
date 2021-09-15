@@ -60,6 +60,7 @@
 (package! ivy-posframe)
 (package! olivetti)
 ;;(package! mastodon)
+(package! emacs-everywhere)
 (package! org-web-tools)
 (package! request)
 (package! s)
