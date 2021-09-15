@@ -293,6 +293,16 @@ I was tired of having to run org-babel-tangle after saving my literate dotfiles.
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
 #+END_SRC
+** Org-Evil by tecosaur.github.io
+:PROPERTIES:
+:ID:       beb32618-f27d-42cc-827c-742c364d483c
+:END:
+#+begin_src emacs-lisp
+(map! :map evil-org-mode-map
+      :after evil-org
+      :n "g k" #'org-previous-visible-heading
+      :n "g j" #'org-next-visible-heading)
+#+end_src
 ** Org-download
 :PROPERTIES:
 :ID:       0d0e77fb-a3f8-4a24-b3c6-5f5bb380db83
@@ -593,7 +603,9 @@ What DOOM left out or broke
 :ID:       8a697ed4-b75f-45df-9705-209c62f53c27
 :END:
 #+BEGIN_SRC emacs-lisp
-(setq deft-directory "~/kDrive/BC/Emacs/org/")
+(setq deft-directory "~/kDrive/BC/Emacs/org/"
+deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
+deft-use-filename-as-title 't)
 (map! :leader
       :prefix "n"
       :desc "Open deft"

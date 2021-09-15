@@ -183,6 +183,11 @@
   "Tangle current buffer asynchronously."
   (dt/org-babel-tangle-async (buffer-file-name)))
 
+(map! :map evil-org-mode-map
+      :after evil-org
+      :n "g k" #'org-previous-visible-heading
+      :n "g j" #'org-next-visible-heading)
+
 (require 'org-download)
 (add-hook 'org-mode-hook 'org-download-enable)
 ;; Use org-download-method directory is being used by default
@@ -389,7 +394,9 @@
         languagetool-default-language "en-US"
         languagetool-java-bin "/usr/bin/java")
 
-(setq deft-directory "~/kDrive/BC/Emacs/org/")
+(setq deft-directory "~/kDrive/BC/Emacs/org/"
+deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
+deft-use-filename-as-title 't)
 (map! :leader
       :prefix "n"
       :desc "Open deft"
