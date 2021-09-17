@@ -23,10 +23,12 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       company           ; the ultimate code completion backend
+       (company
+        +childframe)          ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +fonts)               ; a search engine for love and life
+       ;;(ivy +fonts)               ; a search engine for love and life
+       (vertico +icons)    ; the search engine of the future (tecosaur.github.io)
 
        :ui
        deft              ; notational velocity for Emacs
@@ -39,6 +41,7 @@
        ;;hydra
        indent-guides     ; highlighted indent columns
        ;;minimap           ; show a map of the code on the side
+       (ligatures +extra) ; ligatures and symbols to make your code pretty again (tecosaur.github.io)
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -65,12 +68,12 @@
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
-       word-wrap         ; soft wrapping with language-aware indent
+       ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       dired             ; making dired pretty [functional]
+       (dired +icons)            ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ibuffer         ; interactive buffer management
+       (ibuffer +icons)         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        ;;vc                ; version-control and Emacs, sitting in a tree
 
@@ -92,9 +95,11 @@
        ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
-       (eval +overlay)     ; run code, run (also, repls)
+       (eval +overlay)     ; run code, run (also, repls) (tecosaur.github.io)
        ;;gist              ; interacting with github gists
-       lookup              ; navigate your code and its documentation
+       (lookup
+        +dictionary
+        +docsets)                                ; navigate your code and its documentation (tecosaur.github.io)
        ;;lsp
        magit             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
@@ -148,7 +153,13 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +journal)               ; organize your plain life in plain text
+       (org +journal
+       +roam2
+       +dragndrop
+       +noter
+       +pandoc
+       +gnuplot
+       +present)               ; organize your plain life in plain text (as seen in tecosaur.github.io)
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional

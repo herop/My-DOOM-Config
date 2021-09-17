@@ -1,14 +1,36 @@
 * ABOUT THIS CONFIG 
 This is my personal Doom Emacs config.  Doom Emacs is a distribution of Emacs that uses the "evil" keybindings (Vim keybindings) and includes a number of nice extensions and a bit of configuration out of the box.  I am maintaing this config not just for myself, but also for those that want to explore some of what is possible with Emacs.  I will add a lot of examples of plugins and settings, some of them I may not even use personally.  I do this because many people following me on YouTube look at my configs as "documentation".
 
-* Necessities
+* Necessities (mainly from tecosaur.github.io)
 :PROPERTIES:
 :ID:       d0af93b4-217a-4927-83f1-bc23223b4297
 :END:
 #+begin_src emacs-lisp
-(setq custom-file null-device)
+(setq custom-file null-device
+      delete-by-moving-to-trash t
+      undo-limit 80000000
+      evil-want-fine-undo t
+      auto-save-default t
+      scroll-margin 2)
+      (display-time-mode 1)
+;;      (unless (string-match-p "^Power N/A" (battery))
+      (display-battery-mode 1)
+;; Window and buffer management
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (consult-buffer))
+(setq-default
+       ;; Take window space from all other windows
+      window-combination-resize t
+      x-stretch-cursor t)
 ;;(custom-set-faces '(fixed-pitch ((t (:family "Iosevka"))))) ; or set it to nil
 #+end_src
+
+#+RESULTS:
+: t
+
 * BOOKMARKS AND BUFFERS
 Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.  Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.  Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.
 * Emacs Full-screen & Transparent Background on startup
@@ -71,7 +93,7 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
                               ("mp4" . "mpv")))
 (after! dired
   (setq dired-listing-switches "-agho --group-directories-first")
-  (setq delete-by-moving-to-trash t))
+  )
 #+END_SRC
 
 * EWW
@@ -210,7 +232,7 @@ By default, Doom Emacs does not use 'SPC v', so the format I use for these bindi
 I have toggled display-line-numbers-type so I have line numbers displayed.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t t' for toggle-truncate-lines.
 
 #+BEGIN_SRC emacs-lisp
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 (map! :leader
       :desc "Toggle truncate lines"
       "t t" #'toggle-truncate-lines)
@@ -320,23 +342,6 @@ I was tired of having to run org-babel-tangle after saving my literate dotfiles.
      :leader
      :desc "Org-Download-Yank"
      "y" #'org-download-yank))
-#+end_src
-* Necessities
-:PROPERTIES:
-:ID:       f283f17b-4d8b-471f-b80c-c59cc3227d17
-:END:
-#+begin_src emacs-lisp
-;;(define-key evil-normal-state-map "u" 'undo-fu-only-undo)
-;;(define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
-;;(setq doom-modeline-major-mode-icon t)
-;;(after! org
-;;  (setq undo-outer-limit 24000000)
-;;  ;; Open Links in new window
-;;  (setq org-link-frame-setup '(
-;;                               (vm . vm-visit-folder-other-frame)
-;;                               (vm-imap . vm-visit-imap-folder-other-frame)
-;;                               (file . find-file-other-window)
-;;                               (wl . wl-other-frame))))
 #+end_src
 * Theme
 :PROPERTIES:

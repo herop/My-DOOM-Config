@@ -1,8 +1,23 @@
-(setq custom-file null-device)
+(setq custom-file null-device
+      delete-by-moving-to-trash t
+      undo-limit 80000000
+      evil-want-fine-undo t
+      auto-save-default t
+      scroll-margin 2)
+      (display-time-mode 1)
+;;      (unless (string-match-p "^Power N/A" (battery))
+      (display-battery-mode 1)
+;; Window and buffer management
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (consult-buffer))
+(setq-default
+       ;; Take window space from all other windows
+      window-combination-resize t
+      x-stretch-cursor t)
 ;;(custom-set-faces '(fixed-pitch ((t (:family "Iosevka"))))) ; or set it to nil
-
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
 
 (map! :leader
       :desc "Dired"
@@ -38,7 +53,7 @@
                               ("mp4" . "mpv")))
 (after! dired
   (setq dired-listing-switches "-agho --group-directories-first")
-  (setq delete-by-moving-to-trash t))
+  )
 
 (setq browse-url-browser-function 'eww-browse-url)
 (map! :leader
@@ -112,7 +127,7 @@
       :desc "Ivy switch view"
       "s" #'ivy-switch-view))
 
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 (map! :leader
       :desc "Toggle truncate lines"
       "t t" #'toggle-truncate-lines)
@@ -200,18 +215,6 @@
      :leader
      :desc "Org-Download-Yank"
      "y" #'org-download-yank))
-
-;;(define-key evil-normal-state-map "u" 'undo-fu-only-undo)
-;;(define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo)
-;;(setq doom-modeline-major-mode-icon t)
-;;(after! org
-;;  (setq undo-outer-limit 24000000)
-;;  ;; Open Links in new window
-;;  (setq org-link-frame-setup '(
-;;                               (vm . vm-visit-folder-other-frame)
-;;                               (vm-imap . vm-visit-imap-folder-other-frame)
-;;                               (file . find-file-other-window)
-;;                               (wl . wl-other-frame))))
 
 ;; (setq doom-theme 'doom-dracula)
 ;; LEUVEN Theme by github.com/fniessen
@@ -412,3 +415,6 @@ deft-use-filename-as-title 't)
       erc-autojoin-chennels-alist '(("irc-libera-chat" "#systemcrafters" "#emacs"))
       erc-kill-buffer-on-part t
       erc-aut-query 'bury)
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
