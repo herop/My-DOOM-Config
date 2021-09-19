@@ -60,7 +60,9 @@
 (package! ivy-posframe)
 (package! olivetti)
 ;;(package! mastodon)
-(package! emacs-everywhere)
+(package! doct
+  :recipe (:host github :repo "progfolio/doct")
+  :pin "67fc46c8a68989b932bce879fbaa62c6a2456a1f")
 (package! org-web-tools)
 (package! request)
 (package! s)
