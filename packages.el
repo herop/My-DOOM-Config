@@ -60,6 +60,8 @@
 (package! ivy-posframe)
 (package! olivetti)
 ;;(package! mastodon)
+(package! calibredb :pin "cb93563d0ec9e0c653210bc574f9546d1e7db437")
+(package! nov :pin "b3c7cc28e95fe25ce7b443e5f49e2e45360944a3")
 (package! doct
   :recipe (:host github :repo "progfolio/doct")
   :pin "67fc46c8a68989b932bce879fbaa62c6a2456a1f")
