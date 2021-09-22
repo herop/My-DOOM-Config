@@ -57,9 +57,10 @@
 (package! emms)
 (package! emojify)
 (package! evil-tutor)
-(package! ivy-posframe)
-(package! olivetti)
-;;(package! mastodon)
+(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree")
+  :pin "207c748aa5fea8626be619e8c55bdb1c16118c25")
+(package! org-pretty-table
+  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "87772a9469d91770f87bfa788580fca69b9e697a")
 (package! calibredb :pin "cb93563d0ec9e0c653210bc574f9546d1e7db437")
 (package! nov :pin "b3c7cc28e95fe25ce7b443e5f49e2e45360944a3")
 (package! doct
