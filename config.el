@@ -122,9 +122,6 @@
                     (doom-blend 'red 'orange (- size-index 1)))))
       (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
-
 (map! :leader
       :desc "Dired"
       "d d" #'dired
@@ -208,6 +205,16 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
+
+;;Hook Olivetti to text-mode
+(add-hook 'text-mode-hook #'olivetti-mode)
+(map! :leader
+ (:prefix ("O" . "Olivetti")
+      :desc "Toggle Olivetti"
+      "o" #'olivetti-mode
+      :leader
+      :desc "Set-Width"
+      "r" #'olivetti-set-width))
 
 (add-hook 'org-mode-hook #'+org-pretty-mode)
 (custom-set-faces!
@@ -1155,3 +1162,6 @@ deft-use-filename-as-title 't)
                   (:eval (doom-modeline-segment--major-mode)))))
 
   (add-hook 'nov-mode-hook #'+nov-mode-setup))
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))

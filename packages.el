@@ -93,3 +93,5 @@
 (package! org-super-agenda)
 (package! annotate)
 (package! emacs-everywhere)
+;; Why not try again Olivetti
+(package! olivetti)

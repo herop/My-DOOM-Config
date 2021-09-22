@@ -262,6 +262,21 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 #+END_SRC
+* Olivetti mode
+:PROPERTIES:
+:ID:       bc9ecd0e-b9a9-4dcb-b836-158819c2ef29
+:END:
+ #+begin_src emacs-lisp
+;;Hook Olivetti to text-mode
+(add-hook 'text-mode-hook #'olivetti-mode)
+(map! :leader
+ (:prefix ("O" . "Olivetti")
+      :desc "Toggle Olivetti"
+      "o" #'olivetti-mode
+      :leader
+      :desc "Set-Width"
+      "r" #'olivetti-set-width))
+ #+end_src
 * Visuals by techosaur.github.io
 :PROPERTIES:
 :ID:       bf27087b-de6a-424f-a964-94a182c30364
