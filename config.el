@@ -57,8 +57,9 @@
 ;; (add-hook 'text-mode-hook #'truncate-partial-width-windows '50)
 
 ;; Tecosaur: visual-line-mode might mess with tables
-(remove-hook 'text-mode-hook #'visual-line-mode)
-(add-hook 'text-mode-hook #'auto-fill-mode)
+;; Can't accept that (me)
+;;(remove-hook 'text-mode-hook #'visual-line-mode)
+;;(add-hook 'text-mode-hook #'auto-fill-mode)
 ;; Toggle Calibre
 (map! :leader
       :desc "CalibreDB"
@@ -120,6 +121,9 @@
                       (doom-blend 'orange 'green size-index)
                     (doom-blend 'red 'orange (- size-index 1)))))
       (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
 
 (map! :leader
       :desc "Dired"
@@ -412,7 +416,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
   :priority_e    "[#E]")
 (plist-put +ligatures-extra-symbols :name "⁍")
 
-(setq emojify-emoji-set "twemoji")
+(setq emojify-emoji-set "twemoji-v2")
 (defvar emojify-disabled-emojis
   '(;; Org
     "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
@@ -1151,6 +1155,3 @@ deft-use-filename-as-title 't)
                   (:eval (doom-modeline-segment--major-mode)))))
 
   (add-hook 'nov-mode-hook #'+nov-mode-setup))
-
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))

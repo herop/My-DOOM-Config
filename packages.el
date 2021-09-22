@@ -92,3 +92,4 @@
 (package! org-download)
 (package! org-super-agenda)
 (package! annotate)
+(package! emacs-everywhere)
