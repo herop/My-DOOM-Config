@@ -1,3 +1,69 @@
+;; In certain modes
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+;; As mixed pitch uses the variable mixed-pitch-face, we can create a new function to apply mixed pitch with a serif face instead of the default. This was created for writeroom mode.
+(autoload #'mixed-pitch-serif-mode "mixed-pitch"
+  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+
+(after! mixed-pitch
+  (defface variable-pitch-serif
+    '((t (:family "serif")))
+    "A variable-pitch face with serifs."
+    :group 'basic-faces)
+  (setq mixed-pitch-set-height t)
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
+  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+  (defun mixed-pitch-serif-mode (&optional arg)
+    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+    (interactive)
+    (let ((mixed-pitch-face 'variable-pitch-serif))
+      (mixed-pitch-mode (or arg 'toggle)))))
+;; Alegreya ligatures
+(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+
+(after! marginalia
+  (setq marginalia-censor-variables nil)
+
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
 (setq +zen-text-scale 0.8)
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
@@ -46,15 +112,35 @@
                 ;; (unless +zen--original-org-pretty-table-mode-p (org-pretty-table-mode -1))
                 ))))
 
-;; Side padding, yeah 😇 - DOESN'T work
-;;(defun my-set-margins ()
-;;  "Set margins in current buffer."
-;;  (setq fringes-outside-margins t)
-;;  (setq left-margin-width 24)
-;;  (setq right-margin-width 24))
+;; Coming to terms with Yanking & killing text with other apps (maybe one day)
+(setq save-interprogram-paste-before-kill t) ;; preventing to loose old clipboard data
+(setq select-enable-clipboard t) ;; Better safe than sorry
+;; Becon - Never lose your cursor again (malabarba@github.com)
+(beacon-mode 1)
+;; Smart parentheses (remind me of the SBB)
+(sp-local-pair
+ '(org-mode)
+ "<<" ">>"
+ :actions '(insert))
 
-;; I try myself now with
-;; (add-hook 'text-mode-hook #'truncate-partial-width-windows '50)
+;; My spelling bee is ispell - not for now - at least
+;; Hook flyspell - Not so fast, since I'm mainly writing German.
+;; (add-hook 'org-mode-hook 'turn-on-flyspell)
+;; In planitext
+;;(set-company-backend!
+;;  '(text-mode
+;;    markdown-mode
+;;    gfm-mode)
+;;  '(:seperate
+;;    company-ispell
+;;    company-files
+;;    company-yasnippet))
+;; Dictionary
+;; (setq ispell-dictionary "en-custom")
+;; Ahem, my guess is, this is where the personal dictionary goes
+;; (partly) Not setup yet
+(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+;;      ispell-alternate-dictionary)
 
 ;; Tecosaur: visual-line-mode might mess with tables
 ;; Can't accept that (me)
@@ -121,6 +207,24 @@
                       (doom-blend 'orange 'green size-index)
                     (doom-blend 'red 'orange (- size-index 1)))))
       (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
+(use-package! info-colors
+  :commands (info-colors-fontify-node))
+
+(add-hook 'Info-selection-hook 'info-colors-fontify-node)
+
+;; Jump in with leader + W
+(map! :leader
+ (:prefix ("W" . "org-web")
+      :desc "Link-For-URL"
+      "l" #'org-web-tools-insert-link-for-url
+      :leader
+      :desc "Web-Page-As-Entry"
+      "w" #'org-web-tools-insert-web-page-as-entry
+      :leader
+      :desc "Read-Url-As-Org"
+      "r" #'org-web-tools-read-url-as-org)
+ )
 
 (map! :leader
       :desc "Dired"
@@ -196,20 +300,30 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (interactive)
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
+;; Set specific 😉 font
+;; font for all unicode characters
+(set-fontset-font t 'unicode "Symbola" nil 'prepend)
+;; While we are at it (look up Native Emojies @Reddit)
+(set-fontset-font t 'symbol "BabelStone Flags")
+(set-fontset-font t 'symbol "Twitter Color Emoji")
+(set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
+(set-fontset-font t 'symbol "Noto Emoji" nil 'append)
+(set-fontset-font t 'symbol "Twemoji" nil 'append)
+(set-fontset-font t 'symbol "STIX Two Math" nil 'append)
+(set-fontset-font t 'symbol "Euclid Math One" nil 'append)
+(set-fontset-font t 'symbol "Euclid Math Two" nil 'append)
+(set-fontset-font t 'symbol "Noto Sans Math" nil 'append)
 ;; Font-Face
 (setq doom-font (font-spec :family "JetBrains Mono" :size 18)
       doom-big-font (font-spec :family "JetBrains Mono" :size 24)
       doom-variable-pitch-font (font-spec :family "Overpass" :size 18)
-      doom-unicode-font (font-spec :family "JuliaMono")
+;;      doom-unicode-font (font-spec :family "JuliaMono")
       doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
-(after! doom-themes
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
 
 ;;Hook Olivetti to text-mode
 (add-hook 'text-mode-hook #'olivetti-mode)
 (map! :leader
- (:prefix ("O" . "Olivetti")
+ (:prefix ("b v" . "Olivetti")
       :desc "Toggle Olivetti"
       "o" #'olivetti-mode
       :leader
@@ -226,8 +340,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   '(outline-6 :weight semi-bold :height 1.03)
   '(outline-8 :weight semi-bold)
   '(outline-9 :weight semi-bold))
-(custom-set-faces!
-  '(org-document-title :height 1.2))
+;; Try to let the Leuven theme do the headings!
+;;(custom-set-faces!
+;;  '(org-document-title :height 1.2))
 ;; Error face for deadlines
 (setq org-agenda-deadline-faces
       '((1.001 . error)
@@ -426,7 +541,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (setq emojify-emoji-set "twemoji-v2")
 (defvar emojify-disabled-emojis
   '(;; Org
-    "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
+    "◼" "☑" "☸" "✅" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
     ;; Terminal powerline
     "✔"
     ;; Box drawing
@@ -437,6 +552,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
   :after #'emojify-set-emoji-data
   (dolist (emoji emojify-disabled-emojis)
     (remhash emoji emojify-emojis)))
+;; Replace typed ascii emojis with unicode emojis
 (defun emojify--replace-text-with-emoji (orig-fn emoji text buffer start end &optional target)
   "Modify `emojify--propertize-text-for-emoji' to replace ascii/github emoticons with unicode emojis, on the fly."
   (if (or (not emoticon-to-emoji) (= 1 (length text)))
@@ -494,7 +610,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
       :desc "Annotation-Mode"
       "t A" #'annotate-mode)
 (map! :leader
- (:prefix ("A" . "Annotations")
+ (:prefix ("A" . "annotations")
       :desc "Annote me"
       "a" #'annotate-annotate
       :leader
@@ -503,14 +619,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 
 (map! :leader
       :desc "XWidget Browser" "o x" #'xwidget-webkit-browse-url)
-
-;;(map! :leader
-;;      :desc "Olivetti-Mode"
-;;      "t o" #'olivetti-mode
-;;      :leader
-;;      :desc "Olivetti Set Width"
-;;      "b o" #'olivetti-set-width)
-;;(add-hook 'text-mode-hook #'olivetti-mode)
 
 (map! :leader
       :desc "Copy to register"
@@ -555,6 +663,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
               org-use-property-inheritance t
               org-catch-invisible-edits 'smart
               org-default-notes-file (expand-file-name "notes.org" org-directory)
+              org-list-allow-alphabetical t ;; Alphabetical counters like "[@c]" will be recognized.
               org-agenda-files (directory-files-recursively "~/kDrive/BC/Emacs/org/" "\\.org$")
               org-refile-allow-creating-parent-nodes 'confirm
               org-ellipsis " ▼ "
@@ -588,32 +697,16 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         :desc "Inactive Timestamp"
         "m !" #'org-timestamp-inactive)
 
-(defun dt/org-babel-tangle-async (file)
-  "Invoke `org-babel-tangle-file' asynchronously."
-  (message "Tangling %s..." (buffer-file-name))
-  (async-start
-   (let ((args (list file)))
-  `(lambda ()
-        (require 'org)
-        ;;(load "~/.emacs.d/init.el")
-        (let ((start-time (current-time)))
-          (apply #'org-babel-tangle-file ',args)
-          (format "%.2f" (float-time (time-since start-time))))))
-   (let ((message-string (format "Tangling %S completed after " file)))
-     `(lambda (tangle-time)
-        (message (concat ,message-string
-                         (format "%s seconds" tangle-time)))))))
-
-(defun dt/org-babel-tangle-current-buffer-async ()
-  "Tangle current buffer asynchronously."
-  (dt/org-babel-tangle-async (buffer-file-name)))
-
 (map! :map evil-org-mode-map
       :after evil-org
       :n "g k" #'org-previous-visible-heading
       :n "g j" #'org-next-visible-heading)
 
+;; Declarative Org Capture Templates makes nicer setups for org-capture
+(use-package! doct
+  :commands doct)
 (after! org-capture
+
   (defun +doct-icon-declaration-to-icon (declaration)
     "Convert :icon declaration to icon"
     (let ((name (pop declaration))
@@ -649,14 +742,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
                    :template ("* TODO %?"
                               "%i %a")
                    )
-                  ("Personal note" :keys "n"
-                   :icon ("sticky-note-o" :set "faicon" :color "green")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* %?"
-                              "%i %a"))
                   ("Email" :keys "e"
                    :icon ("envelope" :set "faicon" :color "blue")
                    :file +org-capture-todo-file
@@ -707,7 +792,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
                    :prepend t
                    :headline "Tasks"
                    :type entry
-                   :template ("* TODO %? %^%{extra}"
+                   :template ("* notdo %? %^G %{extra}"
                               "%i %a")
                    :children (("General Task" :keys "k"
                                :icon ("inbox" :set "octicon" :color "yellow")
@@ -715,11 +800,11 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
                                )
                               ("Task with deadline" :keys "d"
                                :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
-                               :extra "\nDEADLINE: %^{Deadline:}t"
+                               :extra "\nDEADLINE: %^{Deadline:}"
                                )
                               ("Scheduled Task" :keys "s"
                                :icon ("calendar" :set "octicon" :color "orange")
-                               :extra "\nSCHEDULED: %^{Start time:}t"
+                               :extra "\nSCHEDULED: %^{Start time:}"
                                )
                               ))
                   ("Project" :keys "p"
@@ -779,6 +864,9 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
                   (set-org-capture-templates)
                   (remove-hook 'server-after-make-frame-hook
                                #'org-capture-reinitialise-hook))))))
+
+
+;; Improve the capture dialogue looks
 (defun org-capture-select-template-prettier (&optional keys)
   "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
@@ -896,25 +984,85 @@ is selected, only the bare key is returned."
         (set-window-parameter nil 'mode-line-format 'none)
         (org-capture)))
 
+(use-package! org-ref
+  ;; :after org
+  :defer t
+  :config
+  (defadvice! org-ref-open-bibtex-pdf-a ()
+    :override #'org-ref-open-bibtex-pdf
+    (save-excursion
+      (bibtex-beginning-of-entry)
+      (let* ((bibtex-expand-strings t)
+             (entry (bibtex-parse-entry t))
+             (key (reftex-get-bib-field "=key=" entry))
+             (pdf (or
+                   (car (-filter (lambda (f) (string-match-p "\\.pdf$" f))
+                                 (split-string (reftex-get-bib-field "file" entry) ";")))
+                   (funcall org-ref-get-pdf-filename-function key))))
+        (if (file-exists-p pdf)
+            (org-open-file pdf)
+          (ding)))))
+  (defadvice! org-ref-open-pdf-at-point-a ()
+    "Open the pdf for bibtex key under point if it exists."
+    :override #'org-ref-open-pdf-at-point
+    (interactive)
+    (let* ((results (org-ref-get-bibtex-key-and-file))
+           (key (car results))
+           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
+      (with-current-buffer (find-file-noselect (cdr results))
+        (save-excursion
+          (bibtex-search-entry (car results))
+          (org-ref-open-bibtex-pdf))))))
+
 (require 'org-download)
 (add-hook 'org-mode-hook 'org-download-enable)
 ;; Use org-download-method directory is being used by default
 (setq-default org-download-image-dir "~/kDrive/BC/Emacs/org/files/images")
 (setq org-download-screenshot-method "gnome-screenshot -a -f %s")
 (map! :leader
-     (:prefix ("D" . "Org-Downloader")
+     (:prefix ("D" . "org-Downloader")
      :desc "Org-Download-Clipboard"
      "c" #'org-download-clipboard
      :leader
      :desc "Org-Download-Yank"
      "y" #'org-download-yank))
 
-(use-package! org-ol-tree
-  :commands org-ol-tree)
+(use-package! org-sidebar
+  :commands org-sidebar)
 (map! :map org-mode-map
       :after org
       :localleader
-      :desc "Outline" "O" #'org-ol-tree)
+      :desc "Sidebar" "S" #'org-sidebar-tree-toggle)
+
+;; Let's make buffer creating a little easier
+(evil-define-command evil-buffer-org-new (count file)
+  "Creates a new ORG buffer replacing the current window, optionally
+   editing a certain FILE"
+  :repeat nil
+  (interactive "P<f>")
+  (if file
+      (evil-edit file)
+    (let ((buffer (generate-new-buffer "*new org*")))
+      (set-window-buffer nil buffer)
+      (with-current-buffer buffer
+        (org-mode)))))
+(map! :leader
+      (:prefix "b"
+       :desc "New empty ORG buffer" "o" #'evil-buffer-org-new))
+
+;; Should - mostly do the trick
+(defun org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurances" count))))
 
 (map! :leader
       :desc "Winner redo"
@@ -947,7 +1095,7 @@ is selected, only the bare key is returned."
         org-roam-completion-everywhere t
         org-roam-node-display-template "${title:100} ${tags:50}")
   :config
-  (org-roam-setup)
+  (org-roam-db-autosync-enable)
   (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
   (add-to-list 'display-buffer-alist
                '(("\\*org\\*"
@@ -964,25 +1112,97 @@ is selected, only the bare key is returned."
         '(("d" "default" plain
            "%?"
            :if-new (file+head "${slug}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %<%Y-%m-%d>\n#+ROAM_TAGS:\n#+ROAM_ALIASES:\n#+ROAM_REFS\n#+FILETAGS:\n")
+                              "#+title: ${title}\n#+created: %<%Y-%m-%d>\n#+roam_tags:\n#+roam_aliases:\n#+roam_refs:\n#+filetags:\n")
            :immediate-finish t
            :unnarrowed t)))
       (setq org-roam-dailies-capture-templates
         '(("d" "default" entry
            "* %?"
            :if-new (file+head "%<%Y-%m-%d>.org"
-                              "#+TITLE: %<%A, %e %B %Y>\n#+ROAM_TAGS:\n#+ROAM_ALIASES:\n#+ROAM_REFS\n#+FILETAGS:\n")))
+                              "#+title: %<%A, %e %B %Y>\n#+roam_tags:\n#+roam_aliases:\n#+roam_refs:\n#+filetags:\n")))
         ))
 
-;;(use-package org-roam-server
-;;  :config
-;;  (setq org-roam-server-host "127.0.0.1"
-;;        org-roam-server-port 8080
-;;        org-roam-server-export-inline-images t
-;;        org-roam-server-authenticate nil
-;;        org-roam-server-network-label-truncate t
-;;        org-roam-server-network-label-truncate-length 60
-;;        org-roam-server-network-label-wrap-length 20))
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam
+  :commands org-roam-ui-open
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+  (require 'org-roam) ; in case autoloaded
+  (defun org-roam-ui-open ()
+    "Ensure the server is active, then open the roam graph."
+    (interactive)
+    (unless org-roam-ui-mode (org-roam-ui-mode 1))
+    (browse-url-xdg-open (format "http://localhost:%d" org-roam-ui-port))))
+
+(use-package org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
+
+(after! org-agenda
+  (org-super-agenda-mode))
+
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-tags-column 100 ;; from testing this seems to be a good value
+      org-agenda-compact-blocks t)
+
+(setq org-agenda-custom-commands
+      '(("o" "Overview"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                          :time-grid t
+                          :date today
+                          :todo "TODAY"
+                          :scheduled today
+                          :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '((:name "Next to do"
+                           :todo "NEXT"
+                           :order 1)
+                          (:name "Important"
+                           :tag "Important"
+                           :priority "A"
+                           :order 6)
+                          (:name "Due Today"
+                           :deadline today
+                           :order 2)
+                          (:name "Due Soon"
+                           :deadline future
+                           :order 8)
+                          (:name "Overdue"
+                           :deadline past
+                           :face error
+                           :order 7)
+                          (:name "Assignments"
+                           :tag "Assignment"
+                           :order 10)
+                          (:name "Issues"
+                           :tag "Issue"
+                           :order 12)
+                          (:name "Emacs"
+                           :tag "Emacs"
+                           :order 13)
+                          (:name "Projects"
+                           :tag "Project"
+                           :order 14)
+                          (:name "Research"
+                           :tag "Research"
+                           :order 15)
+                          (:name "To read"
+                           :tag "Read"
+                           :order 30)
+                          (:name "Waiting"
+                           :todo "WAIT"
+                           :order 20)
+                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 
 (use-package! org-journal
       :config
@@ -1013,7 +1233,8 @@ is selected, only the bare key is returned."
 
 (setq deft-directory "~/kDrive/BC/Emacs/org/"
 deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
-deft-use-filename-as-title 't)
+deft-use-filename-as-title 't
+deft-default-external "org")
 (map! :leader
       :prefix "n"
       :desc "Open deft"
@@ -1162,6 +1383,9 @@ deft-use-filename-as-title 't)
                   (:eval (doom-modeline-segment--major-mode)))))
 
   (add-hook 'nov-mode-hook #'+nov-mode-setup))
+
+(setq calc-angle-mode 'rad  ; radians are rad
+      calc-symbolic-mode t) ; keeps expressions like \sqrt{2} irrational for as long as possible
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 50))

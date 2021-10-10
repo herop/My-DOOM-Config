@@ -54,13 +54,10 @@
 (package! dired-open)
 (package! dmenu)
 ;;(package! elfeed)
-(package! emms)
 (package! emojify)
 (package! evil-tutor)
-(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree")
-  :pin "207c748aa5fea8626be619e8c55bdb1c16118c25")
-(package! org-pretty-table
-  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "87772a9469d91770f87bfa788580fca69b9e697a")
+(package! beacon)
+(package! org-sidebar) ;; alphapapa@github
 (package! calibredb :pin "cb93563d0ec9e0c653210bc574f9546d1e7db437")
 (package! nov :pin "b3c7cc28e95fe25ce7b443e5f49e2e45360944a3")
 (package! doct
@@ -80,12 +77,16 @@
 (package! wc-mode)
 (package! writeroom-mode)
 (package! magit)
-;; (package! org-ref)
+(package! org-ref :pin "3ca9beb744621f007d932deb8a4197467012c23a")
+(package! citeproc :pin "299e52b2dda37960d609efa78c40e255001d163a")
+(package! bibtex-completion :pin "12079bb09f203dda5cc2dd003bd60a6ad490f762")
+(package! bibtex-actions :pin "0e825fafe4f5843f9af4aed0bff8cc393fcae9f2")
+(package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate") :pin "032e765a4cf634fc56abcd18488510d3d5b1ee09")
 (package! org-roam)
-;;  :recipe (:host github :repo "org-roam/org-roam" :branch "v2"))
-(package! languagetool)
-;;(package! org-roam-bibtex)
-;;(package! org-roam-server)
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c745d07018a46b1a20b9f571d999ecf7a092c2e1")
+(package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
 ;;(package! mu4e)
 (package! powerline)
 (package! org-mime)
@@ -95,3 +96,4 @@
 (package! emacs-everywhere)
 ;; Why not try again Olivetti
 (package! olivetti)
+(package! info-colors :pin "47ee73cc19b1049eef32c9f3e264ea7ef2aaf8a5")
