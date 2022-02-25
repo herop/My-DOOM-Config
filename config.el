@@ -112,6 +112,16 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 ;; (unless +zen--original-org-pretty-table-mode-p (org-pretty-table-mode -1))
                 ))))
 
+;; Coding-System Stackoverflow questions: 2901541
+  (set-language-environment 'utf-8)
+  (setq locale-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-selection-coding-system
+    (if (eq system-type 'windows-nt)
+        'utf-16-le  ;; https://rufflewind.com/2014-07-20/pasting-unicode-in-emacs-on-windows
+      'utf-8))
+  (prefer-coding-system 'utf-8)
 ;; Coming to terms with Yanking & killing text with other apps (maybe one day)
 (setq save-interprogram-paste-before-kill t) ;; preventing to loose old clipboard data
 (setq select-enable-clipboard t) ;; Better safe than sorry
@@ -139,7 +149,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;; (setq ispell-dictionary "en-custom")
 ;; Ahem, my guess is, this is where the personal dictionary goes
 ;; (partly) Not setup yet
-(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+;;(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
 ;;      ispell-alternate-dictionary)
 
 ;; Tecosaur: visual-line-mode might mess with tables
@@ -212,6 +222,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   :commands (info-colors-fontify-node))
 
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'alpha '(95 50))
 
 ;; Jump in with leader + W
 (map! :leader
@@ -293,7 +306,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 22))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -309,14 +322,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (set-fontset-font t 'symbol "Noto Color Emoji" nil 'append)
 (set-fontset-font t 'symbol "Noto Emoji" nil 'append)
 (set-fontset-font t 'symbol "Twemoji" nil 'append)
-(set-fontset-font t 'symbol "STIX Two Math" nil 'append)
+(set-fontset-font t 'symbol "STIX Two Math" nil 'append)
 (set-fontset-font t 'symbol "Euclid Math One" nil 'append)
 (set-fontset-font t 'symbol "Euclid Math Two" nil 'append)
 (set-fontset-font t 'symbol "Noto Sans Math" nil 'append)
 ;; Font-Face
-(setq doom-font (font-spec :family "JetBrains Mono" :size 18)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 24)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 18)
+(setq doom-font (font-spec :family "JetBrains Mono" :size 14)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 18)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 14)
 ;;      doom-unicode-font (font-spec :family "JuliaMono")
       doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
 
@@ -691,11 +704,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
                  "|"                 ; The pipe necessary to separate "active" states and "inactive" states
                  "DONE(d)"           ; Task has been completed
                  "CANCL(c@/!)" )))) ; Task has been cancelled
-  (map! :leader
-        :desc "Insert Schedule"
-        "m s" #'org-schedule
-        :desc "Inactive Timestamp"
-        "m !" #'org-timestamp-inactive)
 
 (map! :map evil-org-mode-map
       :after evil-org
@@ -1088,14 +1096,15 @@ is selected, only the bare key is returned."
         :desc "org-roam-node-find" "f" #'org-roam-node-find
         :desc "org-roam-capture" "c" #'org-roam-capture)
   (setq org-roam-directory "~/kDrive/BC/Emacs/org"
-        org-roam-dailies-directory "daily/"
+        org-roam-dailies-directory "~/kDrive/BC/Emacs/org/daily/"
         org-roam-db-gc-threshold gc-cons-threshold
         org-roam-v2-ack t
         org-id-link-to-org-use-id t
         org-roam-completion-everywhere t
-        org-roam-node-display-template "${title:100} ${tags:50}")
+;;        org-roam-node-display-template "${title:*} ${tags:40}"
+        )
   :config
-  (org-roam-db-autosync-enable)
+;;  (org-roam-db-autosync-enable)
   (define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
   (add-to-list 'display-buffer-alist
                '(("\\*org\\*"
@@ -1386,6 +1395,3 @@ deft-default-external "org")
 
 (setq calc-angle-mode 'rad  ; radians are rad
       calc-symbolic-mode t) ; keeps expressions like \sqrt{2} irrational for as long as possible
-
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-;; (set-frame-parameter (selected-frame) 'alpha '(95 50))

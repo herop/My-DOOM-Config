@@ -79,12 +79,13 @@
 (package! magit)
 (package! org-ref :pin "3ca9beb744621f007d932deb8a4197467012c23a")
 (package! citeproc :pin "299e52b2dda37960d609efa78c40e255001d163a")
-(package! bibtex-completion :pin "12079bb09f203dda5cc2dd003bd60a6ad490f762")
-(package! bibtex-actions :pin "0e825fafe4f5843f9af4aed0bff8cc393fcae9f2")
+(package! citar)
 (package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate") :pin "032e765a4cf634fc56abcd18488510d3d5b1ee09")
 (package! org-roam)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+;; Using the `+roam` flag
+(unpin! org-roam)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c745d07018a46b1a20b9f571d999ecf7a092c2e1")
 (package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
 ;;(package! mu4e)
@@ -97,3 +98,4 @@
 ;; Why not try again Olivetti
 (package! olivetti)
 (package! info-colors :pin "47ee73cc19b1049eef32c9f3e264ea7ef2aaf8a5")
+(package! helm)
